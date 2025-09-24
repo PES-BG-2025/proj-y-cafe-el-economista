@@ -17,9 +17,11 @@ def leer_bebidas():
     with open(ruta, newline="", encoding='utf-8-sig') as f:
         # leer el archivo CSV y indicar que el delimitador es una coma
         archivo = csv.DictReader(f, delimiter=',')
-        print(archivo.fieldnames)  # Imprime los nombres de las columnas
         bebidas = []
         for fila in archivo:
-            
-            bebidas.append(fila)
+# Agregamos cada fila del archivo CSV a la lista bebidas
+            bebidas.append({"id_bebida": fila["id_bebida"].strip(),"nombre": fila["nombre"].strip(), "precios_base": float(fila["precios_base"].strip()),"categoria": fila["categoria"].strip(),"activo": int(fila["activo"].strip())})
     return bebidas
+# Probamos la función
+if __name__ == "__main__":
+    print(leer_bebidas)
