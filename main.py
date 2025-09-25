@@ -1,4 +1,4 @@
-# =============================================================
+# ====================================================================================
 # Banco de Guatemala
 # Septiembre 2025
 #
@@ -7,38 +7,42 @@
 #Integrantes:
 # Chuvac González, Berni Alejandro
 # Pérez Romero, Rita Guadalupe
-# ===========================================================
+# ==================================================================================
 
 
 import tkinter as tk
 from tkinter import messagebox
 import datetime
 
-# Datos de prueba, luego se cambia a leer desde CSV
-BEBIDAS = [
-  {"id_bebida": "LATTE-12", "nombre": "Latte 12oz", "precios_base": 22.0, "categoría": "espresso", "activo": 1},
-  {"id_bebida": "ESP-DBL", "nombre": "Espresso doble", "precios_base": 15.0, "categoría": "espresso", "activo": 1},
-  {"id_bebida": "CAP-12", "nombre": "Cappuccino 12oz", "precios_base": 22.0, "categoría": "espresso", "activo": 1},
-]
+# ======== Datos de prueba, luego se cambia a leer desde CSV
+# BEBIDAS = [
+#   {"id_bebida": "LATTE-12", "nombre": "Latte 12oz", "precios_base": 22.0, "categoría": "espresso", "activo": 1},
+#   {"id_bebida": "ESP-DBL", "nombre": "Espresso doble", "precios_base": 15.0, "categoría": "espresso", "activo": 1},
+#   {"id_bebida": "CAP-12", "nombre": "Cappuccino 12oz", "precios_base": 22.0, "categoría": "espresso", "activo": 1},
+# ]
 
-MODIFICADORES = [
-  {"id_modificador": "LECHE-ENT", "nombre": "Leche entera", "tipo": "leche", "ajuste_precio": 0.0,"activo": 1},
-  {"id_modificador": "LECHE-COCO", "nombre": "Leche de coco", "tipo": "leche", "ajuste_precio": 3.0, "activo": 1},
-  {"id_modificador": "SHOT-DBL", "nombre": "Doble shot", "tipo": "shot", "ajuste_precio": 3.0, "activo": 1},
-  {"id_modificador": "JAR-CAR", "nombre": "Jarabe caramelo", "tipo": "jarabe", "ajuste_precio": 2.0,"activo": 1},
-]
+# MODIFICADORES = [
+#   {"id_modificador": "LECHE-ENT", "nombre": "Leche entera", "tipo": "leche", "ajuste_precio": 0.0,"activo": 1},
+#   {"id_modificador": "LECHE-COCO", "nombre": "Leche de coco", "tipo": "leche", "ajuste_precio": 3.0, "activo": 1},
+#   {"id_modificador": "SHOT-DBL", "nombre": "Doble shot", "tipo": "shot", "ajuste_precio": 3.0, "activo": 1},
+#   {"id_modificador": "JAR-CAR", "nombre": "Jarabe caramelo", "tipo": "jarabe", "ajuste_precio": 2.0,"activo": 1},
+# ]
 
-BAKERY = [
-  {"id_producto": "PROD-001", "nombre": "Pastelito 1", "categoría": "pastel azul", "existencias": 48, "precio_unitario": 6.0, "activo": 1},
-  {"id_producto": "PROD-001", "nombre": "Pastelito 2", "categoría": "pastel rojo", "existencias": 12, "precio_unitario": 8.0, "activo": 1},
-]
+# BAKERY = [
+#   {"id_producto": "PROD-001", "nombre": "Pastelito 1", "categoría": "pastel azul", "existencias": 48, "precio_unitario": 6.0, "activo": 1},
+#   {"id_producto": "PROD-001", "nombre": "Pastelito 2", "categoría": "pastel rojo", "existencias": 12, "precio_unitario": 8.0, "activo": 1},
+# ]
+# ======== Fin de datos de prueba
 
 pedido_actual = {
     "fecha_hora": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     "lineas": [],
-    "total": 0.0
-}
+    "total": 0.0}
 id_linea_actual = 0
+
+BEBIDAS = data_io.leer_bebidas()
+BAKERY = data.io.leer_bakery()
+MODIFICADORES = data_io.leer_modificadores()
 
 # Implementar la lógica para abrir la ventana de nuevo pedido
 def abrir_ventana_pedido():
