@@ -42,4 +42,25 @@ def leer_bakery():
             # Igual que bebidas: limpiamos espacios y convertimos tipos
             productos.append({"id_producto": fila["id_producto"].strip(),"nombre": fila["nombre"].strip(),"precio": float(fila["precio"].strip()), "stock": int(fila["stock"].strip()),"activo": int(fila["activo"].strip())})
     return productos
+# ================================================================================
+# Leer catálogo de modificadores (tamaños y extras)
+# ================================================================================
+def leer_modificadores():
+    ruta = carpeta_catalogo / "modificadores.csv"
+
+    with open(ruta, newline="", encoding="utf-8-sig") as f:
+        archivo = csv.DictReader(f, delimiter=",")
+        modificadores = []
+        for fila in archivo:
+            modificadores.append({
+                "id_modificador": fila["id_modificador"].strip(),
+                "nombre": fila["nombre"].strip(),
+                "tipo": fila["tipo"].strip(),  # "tamaño" o "extra"
+                "precio_extra": float(fila["precio_extra"].strip()),
+                "activo": int(fila["activo"].strip())
+            })
+    return modificadores
+
+# ================================================================================ 
+
 
