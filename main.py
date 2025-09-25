@@ -14,9 +14,9 @@ import tkinter as tk
 
 # Datos de prueba, luego se cambia a leer desde CSV
 BEBIDAS = [
-  {"id_bebida": "LATTE-12", "nombre": "Latte 12oz", "precio_base": 22.0, "categoría": "espresso", "activo": 1},
-  {"id_bebida": "ESP-DBL", "nombre": "Espresso doble", "precio_base": 15.0, "categoría": "espresso", "activo": 1},
-  {"id_bebida": "CAP-12", "nombre": "Cappuccino 12oz", "precio_base": 22.0, "categoría": "espresso", "activo": 1},
+  {"id_bebida": "LATTE-12", "nombre": "Latte 12oz", "precios_base": 22.0, "categoría": "espresso", "activo": 1},
+  {"id_bebida": "ESP-DBL", "nombre": "Espresso doble", "precios_base": 15.0, "categoría": "espresso", "activo": 1},
+  {"id_bebida": "CAP-12", "nombre": "Cappuccino 12oz", "precios_base": 22.0, "categoría": "espresso", "activo": 1},
 ]
 
 MODIFICADORES = [
