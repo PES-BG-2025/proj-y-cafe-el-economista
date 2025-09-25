@@ -48,9 +48,50 @@ def abrir_ventana_pedido():
   tk.Button(ventana_pedido, text="Cancelar pedido", width=25, command=cancelar_pedido).pack(pady=20)
 
 def mostrar_bebidas():
-  pass
-def mostrar_bakery():
-  pass
+    ventana_bebidas = tk.Toplevel()
+    ventana_bebidas.title("Café el economista")
+    #ventana_bebidas.geometry("1000x400")  # Ancho suficiente para 4 columnas
+
+    # Título centrado
+    tk.Label(ventana_bebidas, text="Bebidas disponibles", font=("Arial", 14)).grid(row=0, column=0, columnspan=4, pady=10)
+
+    # Filtrar bebidas activas
+    bebidas_activas = []
+    for bebida in BEBIDAS:
+        if bebida["activo"] == 1:
+            bebidas_activas.append(bebida)
+
+    # Si no hay bebidas activas
+    if not bebidas_activas:
+        tk.Label(ventana_bebidas, text="No hay bebidas disponibles").grid(row=1, column=0, columnspan=4, pady=10)
+        return
+
+    # Mostrar botones en 4 columnas
+    fila = 1
+    columna = 0
+
+    for bebida in bebidas_activas:
+        texto = f"{bebida['nombre']} - Q{round(bebida['precios_base'], 2)}"
+        boton = tk.Button(
+            ventana_bebidas,
+            text=texto,
+            width=18,
+            command=lambda b=bebida: ventana_bebida_con_modificadores(b)
+        )
+        boton.grid(row=fila, column=columna, padx=5, pady=5)
+
+        columna += 1
+        if columna == 4:
+            columna = 0
+            fila += 1
+
+def ventana_bebida_con_modificadores(bebida):
+   pass
+  
+
+#def mostrar_bakery():
+  #pass
+
 def ver_pedido():
   pass
 def pagar_pedido():
