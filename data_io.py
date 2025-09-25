@@ -25,3 +25,21 @@ def leer_bebidas():
 # Probamos la función
 if __name__ == "__main__":
     print(leer_bebidas)
+
+
+    # ================================================================================ 
+# Leer catálogo de productos de panadería (bakery)
+# ================================================================================
+def leer_bakery():
+    # Ruta completa al archivo CSV
+    ruta = carpeta_catalogo / "bakery_menu.csv"
+
+    # Abrimos y procesamos el archivo
+    with open(ruta, newline="", encoding='utf-8-sig') as f:
+        archivo = csv.DictReader(f, delimiter=',')
+        productos = []
+        for fila in archivo:
+            # Igual que bebidas: limpiamos espacios y convertimos tipos
+            productos.append({"id_producto": fila["id_producto"].strip(),"nombre": fila["nombre"].strip(),"precio": float(fila["precio"].strip()), "stock": int(fila["stock"].strip()),"activo": int(fila["activo"].strip())})
+    return productos
+
