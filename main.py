@@ -185,6 +185,58 @@ def cerrar_venta():
 def salir():
   ventana.quit()
 
+
+def mostrar_bakery():
+    ventana_bakery = tk.Toplevel()
+    ventana_bakery.title("Café el economista")
+
+    tk.Label(ventana_bakery, text="Productos de Bakery", font=("Arial", 14)).grid(row=0, column=0, columnspan=4, pady=10)
+
+    productos_activos = [p for p in BAKERY if p["activo"] == 1]
+
+    if not productos_activos:
+        tk.Label(ventana_bakery, text="No hay productos disponibles").grid(row=1, column=0, columnspan=4, pady=10)
+        return
+
+    def agregar_producto_bakery(producto, ventana_bakery):
+        global id_linea_actual
+        id_linea_actual += 1
+
+        nueva_linea = {
+            "id_linea": id_linea_actual,
+            "tipo": "bakery",
+            "id_item": producto["id_producto"],
+            "nombre": producto["nombre"],
+            "cantidad": 1,
+            "precio_unitario": producto["precio_unitario"],
+            "modificadores": [],
+            "total_linea": producto["precio_unitario"]
+        }
+
+        pedido_actual["lineas"].append(nueva_linea)
+        pedido_actual["total"] += producto["precio_unitario"]
+
+        messagebox.showinfo("Producto agregado", f"{producto['nombre']} fue agregado correctamente.\nTotal: Q{producto['precio_unitario']:.2f}")
+        ventana_bakery.destroy()
+    
+    fila = 1
+    columna = 0
+
+    for producto in productos_activos:
+        texto = f"{producto['nombre']} - Q{round(producto['precio_unitario'], 2)}"
+        boton = tk.Button(
+            ventana_bakery,
+            text=texto,
+            width=18,
+            command=lambda p=producto: agregar_producto_bakery(p, ventana_bakery)
+        )
+        boton.grid(row=fila, column=columna, padx=5, pady=5)
+
+        columna += 1
+        if columna == 4:
+            columna = 0
+            fila += 1
+
 # Crear ventana principal
 ventana = tk.Tk()
 ventana.title("Café el economista")  # Título de la ventana (barra superior)
