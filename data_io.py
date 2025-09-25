@@ -45,12 +45,14 @@ def leer_bakery():
 # Leer catálogo de modificadores (tamaños y extras)
 # ================================================================================
 def leer_modificadores():
+    # Ruta completa al archivo CSV
     ruta = carpeta_catalogo / "modificadores.csv"
-
+    # Abrimos y procesamos el archivo
     with open(ruta, newline="", encoding="utf-8-sig") as f:
         archivo = csv.DictReader(f, delimiter=",")
         modificadores = []
         for fila in archivo:
+            # Igual que modificadores: limpiamos espacios y convertimos tipos
             modificadores.append({
                 "id_modificador": fila["id_modificador"].strip(),
                 "nombre": fila["nombre"].strip(),
