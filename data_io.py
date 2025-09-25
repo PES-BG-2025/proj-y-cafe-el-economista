@@ -25,8 +25,6 @@ def leer_bebidas():
 # Probamos la función
 if __name__ == "__main__":
     print(leer_bebidas)
-
-
     # ================================================================================ 
 # Leer catálogo de productos de panadería (bakery)
 # ================================================================================
@@ -60,7 +58,49 @@ def leer_modificadores():
                 "activo": int(fila["activo"].strip())
             })
     return modificadores
-
 # ================================================================================ 
-
+# Funciones de escritura
+# ================================================================================ 
+def actualizar_bakery(bakery: list[dict]):
+  ruta = CARPETA_CATALOGO / "bakery_menu.csv"
+  # El modo w es para borrar lo que ya tenía el archivo y escribir de nuevo
+  with open(ruta, mode="w", newline="", encoding="utf-8-sig") as f:
+    campos = ["id_producto", "nombre", "categoria", "existencias", "precio_unitario", "activo"]
+    # Escribir es un objeto que permite escribir en el archivo csv
+    escribir = csv.DictWriter(f, fieldnames=campos, delimiter=",")
+    # Escribir la cabecera
+    escribir.writeheader()
+    # Escribir las filas
+    for producto in bakery:
+      escribir.writerow({
+        "id_producto": producto["id_producto"],
+        "nombre": producto["nombre"],
+        "categoria": producto["categoria"],
+        "existencias": producto["existencias"],
+        "precio_unitario": f"{producto['precio_unitario']:.2f}",
+        "activo": producto["activo"]
+      })
+# ================================================================================ 
+def guardar_lineas(pedido, id_pedido):
+  ruta = Path("datos/ventas_del_dia/ventas.csv")
+  # No borra lo que ya tiene el archivo, sino que agrega al final por eso es mode="a"
+  with open(ruta, mode="a", newline="", encoding="utf-8-sig") as f:
+    campos = ["fecha_hora","id_ticket","id_linea","tipo_item","id_item","cantidad","precio_unitario","total_linea"]
+    writer = csv.DictWriter(f, fieldnames=campos)
+    # tell devuelve la posición actual del cursor en el archivo, si es 0 es que el archivo está vacío y hay que escribir la cabecera
+    if f.tell() == 0:
+      writer.writeheader()
+    for linea in pedido["lineas"]:
+      writer.writerow({
+        "fecha_hora": pedido["fecha_hora"],
+        "id_ticket": id_pedido,
+        "id_linea": linea["id_linea"],
+        "tipo_item": linea["tipo"],
+        "id_item": linea["id_item"],
+        "cantidad": linea["cantidad"],
+        "precio_unitario": f"{linea['precio_unitario']:.2f}",
+        "total_linea": f"{linea['total_linea']:.2f}"
+      })
+# ================================================================================ 
+      
 
