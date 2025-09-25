@@ -22,16 +22,23 @@ BEBIDAS = [
 ]
 
 MODIFICADORES = [
-  {"id_modificador": "LECHE-ENT", "nombre": "Leche entera", "tipo": "leche", "ajuste_precio": 0.0},
-  {"id_modificador": "LECHE-COCO", "nombre": "Leche de coco", "tipo": "leche", "ajuste_precio": 3.0},
-  {"id_modificador": "SHOT-DBL", "nombre": "Doble shot", "tipo": "shot", "ajuste_precio": 3.0},
-  {"id_modificador": "JAR-CAR", "nombre": "Jarabe caramelo", "tipo": "jarabe", "ajuste_precio": 2.0},
+  {"id_modificador": "LECHE-ENT", "nombre": "Leche entera", "tipo": "leche", "ajuste_precio": 0.0,"activo": 1},
+  {"id_modificador": "LECHE-COCO", "nombre": "Leche de coco", "tipo": "leche", "ajuste_precio": 3.0, "activo": 1},
+  {"id_modificador": "SHOT-DBL", "nombre": "Doble shot", "tipo": "shot", "ajuste_precio": 3.0, "activo": 1},
+  {"id_modificador": "JAR-CAR", "nombre": "Jarabe caramelo", "tipo": "jarabe", "ajuste_precio": 2.0,"activo": 1},
 ]
 
 BAKERY = [
   {"id_producto": "PROD-001", "nombre": "Pastelito 1", "categoría": "pastel azul", "existencias": 48, "precio_unitario": 6.0, "activo": 1},
   {"id_producto": "PROD-001", "nombre": "Pastelito 2", "categoría": "pastel rojo", "existencias": 12, "precio_unitario": 8.0, "activo": 1},
 ]
+
+pedido_actual = {
+    "fecha_hora": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    "lineas": [],
+    "total": 0.0
+}
+id_linea_actual = 0
 
 # Implementar la lógica para abrir la ventana de nuevo pedido
 def abrir_ventana_pedido():
