@@ -208,9 +208,66 @@ def ver_pedido():
 
 
 def pagar_pedido():
-  pass
-def cancelar_pedido():
-  pass
+    if not pedido_actual["lineas"]:
+        messagebox.showwarning("Sin productos", "No hay productos en el pedido.")
+        return
+
+    ventana_pago = tk.Toplevel()
+    ventana_pago.title("Pagar pedido")
+
+    tk.Label(ventana_pago, text="Resumen del pedido", font=("Arial", 14)).pack(pady=10)
+
+    # Mostrar cada línea del pedido
+    for linea in pedido_actual["lineas"]:
+        texto = f"{linea['nombre']} - Q{linea['precio_unitario']:.2f}"
+        if linea["modificadores"]:
+            for mod in linea["modificadores"]:
+                texto += f"\n    + {mod['nombre']} (+Q{mod['ajuste_precio']:.2f})"
+        texto += f"\n  Subtotal: Q{linea['total_linea']:.2f}\n"
+        tk.Label(ventana_pago, text=texto, justify="left", anchor="w", font=("Arial", 11)).pack(padx=20, pady=5, fill="x")
+
+    # Total general
+    tk.Label(ventana_pago, text=f"Total a pagar: Q{pedido_actual['total']:.2f}", font=("Arial", 12, "bold")).pack(pady=10)
+
+		# Función que genera la información del pago y la almacena con funciones que vienen de data_io
+    def confirmar_pago():
+        id_pedido = f"PV-{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}"
+
+        pago_info = {
+            "metodo": "tarjeta",
+            "monto": pedido_actual["total"],
+            "cambio": 0.0
+        }
+        
+        data_io.guardar_pedido(pedido_actual, pago_info, id_pedido)
+        data_io.guardar_lineas(pedido_actual, id_pedido)
+        data_io.guardar_modificadores(pedido_actual, id_pedido)
+
+        # Actualizar existencias de bakery
+        for linea in pedido_actual["lineas"]:
+            if linea["tipo"] == "bakery":
+                for producto in BAKERY:
+                    if producto["id_producto"] == linea["id_item"]:
+                        producto["existencias"] -= 1
+                        break
+
+        data_io.actualizar_bakery(BAKERY)
+
+        messagebox.showinfo("Pago exitoso", f"Pedido pagado correctamente.\nMétodo: Tarjeta")
+
+        pedido_actual["lineas"].clear()
+        pedido_actual["total"] = 0.0
+        pedido_actual["fecha_hora"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        ventana_pago.destroy()
+
+    def cancelar_pago():
+        messagebox.showinfo("Pedido en curso", "Continúa agregando a tu pedido.")
+        ventana_pago.destroy()
+
+    tk.Button(ventana_pago, text="Confirmar pago", command=confirmar_pago).pack(pady=10)
+    tk.Button(ventana_pago, text="Cancelar", command=cancelar_pago).pack(pady=5)
+
 
 
 

@@ -33,9 +33,10 @@ def leer_bebidas():
 # Agregamos cada fila del archivo CSV a la lista bebidas
             bebidas.append({"id_bebida": fila["id_bebida"].strip(),"nombre": fila["nombre"].strip(), "precios_base": float(fila["precios_base"]),"categoria": fila.get("categoria", "").strip(),"activo": int(fila["activo"])})
     return bebidas
+
 # Probamos la función
 if __name__ == "__main__":
-    print(leer_bebidas)
+    print(leer_bebidas())
 
 
 # ================================================================================ 
@@ -51,9 +52,9 @@ def leer_bakery():
         productos = []
         for fila in archivo:
             # Igual que bebidas: limpiamos espacios y convertimos tipos
-            productos.append({"id_producto": fila["id_producto"],"nombre": fila["nombre"].strip(),"categoria": fila.get("categoria", "").strip(), "existencias": float(fila["existencias"]), "precio_unitario": float(fila["precio unitario"], "activo": int(fila["activo"])})
+            productos.append({"id_producto": fila["id_producto"],"nombre": fila["nombre"].strip(),"categoria": fila.get("categoria", "").strip(), "existencias": float(fila["existencias"]), "precio_unitario": float(fila["precio_unitario"]), "activo": int(fila["activo"])})
     return productos
-    
+
 # ================================================================================
 # Leer catálogo de modificadores (tamaños y extras)
 # ================================================================================
@@ -69,15 +70,15 @@ def leer_modificadores():
             modificadores.append({
                 "id_modificador": fila["id_modificador"].strip(),
                 "nombre": fila["nombre"].strip(),
-                "tipo": fila.get["tipo", ""].strip(), 
-                "precio_extra": float(fila["precio_extra"].strip()),
+                "tipo": fila.get("tipo", "").strip(), 
+                "ajuste_precio": float(fila["ajuste_precio"].strip()),
                 "activo": int(fila["activo"].strip())
             })
             # "tamaño" o "extra" 
     return modificadores
 
 if __name__ == "__main__":
-   print(leer bebidas())
+   print(leer_bebidas())
    print(leer_modificadores())
   
 # ================================================================================ 
@@ -125,9 +126,10 @@ def guardar_lineas(pedido, id_pedido):
         "total_linea": f"{linea['total_linea']:.2f}"
       })
 # ================================================================================     
-#definir 4 funciones 
-# funcion para guardar los archivos en un csv
+# definir 4 funciones 
+# función para guardar los archivos en un csv
 # ================================================================================ 
+
 # Guarda un pedido en pedidos.csv
 def guardar_pedido(pedido, pago_info, id_pedido):
   # Ruta del archivo donde se guardan los pedidos
@@ -155,9 +157,10 @@ def guardar_pedido(pedido, pago_info, id_pedido):
       "cambio": f"{pago_info['cambio']:.2f}"
     })
 
-    # ================================================================================ 
+# ================================================================================ 
 # PARA GUARDAR LOS MODIFICADORES
-    # ================================================================================ 
+# ================================================================================ 
+
     # Guarda los modificadores de un pedido en ventas_modificadores.csv
 def guardar_modificadores(pedido, id_pedido):
   # Ruta del archivo donde se guardan los modificadores
@@ -184,9 +187,9 @@ def guardar_modificadores(pedido, id_pedido):
           "cantidad": 1,  # cada modificador cuenta como uno
           "ajuste_total": f"{mod['ajuste_precio']:.2f}"
         })
- # ================================================================================
+# ================================================================================
 # PARA EL CIERRE GENERAL
-  # ================================================================================
+# ================================================================================
 
 # Registra el cierre general de un día en cierres_generales.csv
 def registrar_cierre_general(fecha, num_pedidos, total_dia):
@@ -211,8 +214,8 @@ def registrar_cierre_general(fecha, num_pedidos, total_dia):
     })
 
 # ================================================================================
-#Manejo de cierre de ventas
- # ================================================================================
+# Manejo de cierre de ventas
+# ================================================================================
 
 # Genera el cierre diario de ventas
 def generar_cierre_diario():
@@ -258,8 +261,9 @@ def generar_cierre_diario():
 
 
 # ================================================================================
-#Manejo de cierre de ventas
- # ================================================================================
+# Manejo de cierre de ventas
+# ================================================================================
+
  # Genera un reporte resumido de ventas del día
 def generar_reporte_resumido_dia(bebidas, bakery):
     # Fecha de hoy en "YYYY-MM-DD"
@@ -309,4 +313,3 @@ def generar_reporte_resumido_dia(bebidas, bakery):
 
     # Retornar el resumen y el total del día
     return resumen, total_dia
-
