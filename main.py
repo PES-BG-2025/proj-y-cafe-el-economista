@@ -31,8 +31,35 @@ BAKERY = [
   {"id_producto": "PROD-001", "nombre": "Pastelito 2", "categoría": "pastel rojo", "existencias": 12, "precio_unitario": 8.0, "activo": 1},
 ]
 
+# Implementar la lógica para abrir la ventana de nuevo pedido
 def abrir_ventana_pedido():
-  pass  # Implementar la lógica para abrir la ventana de nuevo pedido
+  """Implementa la lógica para abrir la venta de nuevo pedido"""
+  ventana_pedido = tk.Toplevel(ventana)
+  ventana_pedido.title("Café el economista")
+  ventana_pedido.geometry("400x350")
+
+  tk.Label(ventana_pedido, text="Nuevo Pedido", font=("Arial", 14)).pack(pady=20)
+
+  # Botones del menú de pedido
+  tk.Button(ventana_pedido, text="Bebidas", width=25, command=mostrar_bebidas).pack(pady=5)
+  tk.Button(ventana_pedido, text="Bakery", width=25, command=mostrar_bakery).pack(pady=5)
+  tk.Button(ventana_pedido, text="Ver pedido",width=25, command=ver_pedido).pack(pady=10)
+  tk.Button(ventana_pedido, text="Pagar pedido", width=25, command=pagar_pedido).pack(pady=5)
+  tk.Button(ventana_pedido, text="Cancelar pedido", width=25, command=cancelar_pedido).pack(pady=20)
+
+def mostrar_bebidas():
+  pass
+def mostrar_bakery():
+  pass
+def ver_pedido():
+  pass
+def pagar_pedido():
+  pass
+def cancelar_pedido():
+  pass
+
+
+
 def mostrar_reporte_dia():
   pass
 def cerrar_venta():
