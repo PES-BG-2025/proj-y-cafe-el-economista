@@ -95,7 +95,75 @@ def mostrar_bebidas():
             fila += 1
 
 def ventana_bebida_con_modificadores(bebida):
-   pass
+    ventana_mods = tk.Toplevel()
+    ventana_mods.title("Café el economista")
+
+    precio_base = round(bebida["precios_base"], 2)
+    subtotal_var = tk.DoubleVar(value=precio_base)
+
+    tk.Label(ventana_mods, text=bebida["nombre"], font=("Arial", 14)).pack(pady=10)
+    tk.Label(ventana_mods, text=f"Precio base: Q{precio_base:.2f}", font=("Arial", 12)).pack()
+
+    tk.Label(ventana_mods, text="Modificadores disponibles:", font=("Arial", 12)).pack(pady=10)
+
+    modificadores_activados = []
+    modificadores_vars = []
+
+    for mod in MODIFICADORES:
+        if mod["activo"] == 1:
+            var = tk.IntVar()
+            chk = tk.Checkbutton(
+                ventana_mods,
+                text=f"{mod['nombre']} (+Q{mod['ajuste_precio']:.2f})",
+                variable=var,
+                command=lambda: actualizar_subtotal()
+            )
+            chk.pack(anchor="w", padx=20)
+            modificadores_activados.append(mod)
+            modificadores_vars.append(var)
+
+    subtotal_label = tk.Label(ventana_mods, text=f"Subtotal: Q{subtotal_var.get():.2f}", font=("Arial", 12))
+    subtotal_label.pack(pady=10)
+
+    def actualizar_subtotal():
+        total = precio_base
+        for i in range(len(modificadores_activados)):
+            if modificadores_vars[i].get() == 1:
+                total += modificadores_activados[i]["ajuste_precio"]
+        subtotal_var.set(round(total, 2))
+        subtotal_label.config(text=f"Subtotal: Q{subtotal_var.get():.2f}")
+
+    def agregar_bebida():
+        seleccionados = []
+        for i in range(len(modificadores_activados)):
+            if modificadores_vars[i].get() == 1:
+                seleccionados.append(modificadores_activados[i])
+
+        global id_linea_actual
+        id_linea_actual += 1
+
+        total_modificadores = sum(mod["ajuste_precio"] for mod in seleccionados)
+        total_linea = precio_base + round(total_modificadores, 2)
+
+        nueva_linea = {
+            "id_linea": id_linea_actual,
+            "tipo": "bebida",
+            "id_item": bebida["id_bebida"],
+            "nombre": bebida["nombre"],
+            "cantidad": 1,
+            "precio_unitario": precio_base,
+            "modificadores": seleccionados,
+            "total_linea": total_linea
+        }
+
+        pedido_actual["lineas"].append(nueva_linea)
+        pedido_actual["total"] += total_linea
+
+        messagebox.showinfo("Pedido agregado", f"{bebida['nombre']} fue agregada correctamente.\nTotal: Q{total_linea:.2f}")
+        ventana_mods.destroy()
+
+    tk.Button(ventana_mods, text="Agregar bebida", command=agregar_bebida).pack(pady=10)
+  
   
 
 #def mostrar_bakery():
