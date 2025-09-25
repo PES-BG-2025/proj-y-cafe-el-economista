@@ -8,6 +8,7 @@
 # Chuvac González, Berni Alejandro
 # Pérez Romero, Rita Guadalupe
 # ==================================================================================
+
 # ================================================================================ --- IGNORE ---
 #Esto nos permitirá importar y leer archivos CSV
 import csv 
@@ -30,12 +31,14 @@ def leer_bebidas():
         bebidas = []
         for fila in archivo:
 # Agregamos cada fila del archivo CSV a la lista bebidas
-            bebidas.append({"id_bebida": fila["id_bebida"].strip(),"nombre": fila["nombre"].strip(), "precios_base": float(fila["precios_base"].strip()),"categoria": fila["categoria"].strip(),"activo": int(fila["activo"].strip())})
+            bebidas.append({"id_bebida": fila["id_bebida"].strip(),"nombre": fila["nombre"].strip(), "precios_base": float(fila["precios_base"]),"categoria": fila.get("categoria", "").strip(),"activo": int(fila["activo"])})
     return bebidas
 # Probamos la función
 if __name__ == "__main__":
     print(leer_bebidas)
-    # ================================================================================ 
+
+
+# ================================================================================ 
 # Leer catálogo de productos de panadería (bakery)
 # ================================================================================
 def leer_bakery():
@@ -48,8 +51,9 @@ def leer_bakery():
         productos = []
         for fila in archivo:
             # Igual que bebidas: limpiamos espacios y convertimos tipos
-            productos.append({"id_producto": fila["id_producto"].strip(),"nombre": fila["nombre"].strip(),"precio": float(fila["precio"].strip()), "stock": int(fila["stock"].strip()),"activo": int(fila["activo"].strip())})
+            productos.append({"id_producto": fila["id_producto"],"nombre": fila["nombre"].strip(),"categoria": fila.get("categoria", "").strip(), "existencias": float(fila["existencias"]), "precio_unitario": float(fila["precio unitario"], "activo": int(fila["activo"])})
     return productos
+    
 # ================================================================================
 # Leer catálogo de modificadores (tamaños y extras)
 # ================================================================================
@@ -65,11 +69,17 @@ def leer_modificadores():
             modificadores.append({
                 "id_modificador": fila["id_modificador"].strip(),
                 "nombre": fila["nombre"].strip(),
-                "tipo": fila["tipo"].strip(),  # "tamaño" o "extra"
+                "tipo": fila.get["tipo", ""].strip(), 
                 "precio_extra": float(fila["precio_extra"].strip()),
                 "activo": int(fila["activo"].strip())
             })
+            # "tamaño" o "extra" 
     return modificadores
+
+if __name__ == "__main__":
+   print(leer bebidas())
+   print(leer_modificadores())
+  
 # ================================================================================ 
 # Funciones de escritura
 # ================================================================================ 

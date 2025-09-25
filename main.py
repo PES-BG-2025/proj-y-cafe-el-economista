@@ -42,7 +42,7 @@ pedido_actual = {
 id_linea_actual = 0
 
 BEBIDAS = data_io.leer_bebidas()
-BAKERY = data.io.leer_bakery()
+BAKERY = data_io.leer_bakery()
 MODIFICADORES = data_io.leer_modificadores()
 
 # Implementar la lógica para abrir la ventana de nuevo pedido
