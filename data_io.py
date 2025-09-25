@@ -2,6 +2,7 @@
 # ================================================================================ --- IGNORE ---
 #Esto nos permitirá importar y leer archivos CSV
 import csv 
+import datetime
 # Para poder manejar rutas de archivos de manera más sencilla
 from pathlib import Path
 
@@ -102,12 +103,9 @@ def guardar_lineas(pedido, id_pedido):
         "precio_unitario": f"{linea['precio_unitario']:.2f}",
         "total_linea": f"{linea['total_linea']:.2f}"
       })
-# ================================================================================ 
-      
+# ================================================================================     
 #definir 4 funciones 
-
 # funcion para guardar los archivos en un csv
-
 # ================================================================================ 
 # Guarda un pedido en pedidos.csv
 def guardar_pedido(pedido, pago_info, id_pedido):
@@ -191,6 +189,103 @@ def registrar_cierre_general(fecha, num_pedidos, total_dia):
       "total_dia": f"{total_dia:.2f}"
     })
 
-     # ================================================================================
+# ================================================================================
+#Manejo de cierre de ventas
+ # ================================================================================
 
+# Genera el cierre diario de ventas
+def generar_cierre_diario():
+  # Fecha de hoy en formato "YYYY-MM-DD"
+  hoy = datetime.date.today().isoformat()
+
+  # Archivo del cierre del día (uno por fecha)
+  ruta = Path("datos/cierres") / f"cierre_caja_{hoy}.csv"
+
+  # Leer pedidos del día desde pedidos.csv
+  pedidos_hoy = []
+  pedidos_path = Path("datos/ventas_del_dia/pedidos.csv")
+  if pedidos_path.exists():
+    with open(pedidos_path, newline="", encoding="utf-8-sig") as f:
+      archivo = csv.DictReader(f)
+      for fila in archivo:
+        # Solo pedidos cuya fecha empieza con "hoy"
+        if fila["fecha_hora"].startswith(hoy):
+          pedidos_hoy.append(fila)
+
+  # Calcular total y número de pedidos
+  total_dia = 0.0
+  for p in pedidos_hoy:
+    total_dia += float(p["total_pedido"])
+  num_pedidos = len(pedidos_hoy)
+
+  # Guardar cierre del día en su archivo propio
+  with open(ruta, "w", newline="", encoding="utf-8-sig") as f:
+    campos = ["fecha", "num_pedidos", "total_dia"]
+    writer = csv.DictWriter(f, fieldnames=campos)
+    writer.writeheader()
+    writer.writerow({
+      "fecha": hoy,
+      "num_pedidos": num_pedidos,
+      "total_dia": f"{total_dia:.2f}"
+    })
+
+  # Actualizar también el acumulado de cierres generales
+  registrar_cierre_general(hoy, num_pedidos, total_dia)
+
+  # Mensaje de confirmación en consola
+  print(f"Cierre del {hoy} generado en {ruta}")
+
+
+# ================================================================================
+#Manejo de cierre de ventas
+ # ================================================================================
+ # Genera un reporte resumido de ventas del día
+def generar_reporte_resumido_dia(bebidas, bakery):
+    # Fecha de hoy en "YYYY-MM-DD"
+    hoy = datetime.date.today().isoformat()
+
+    # Archivo donde se registran las ventas
+    ruta_ventas = Path("datos/ventas_del_dia/ventas.csv")
+
+    # Diccionario con el resumen y total acumulado
+    resumen = {}
+    total_dia = 0.0
+
+    # Si no existe el archivo, devolver vacío
+    if not ruta_ventas.exists():
+        return resumen, total_dia
+
+    # Función interna para obtener nombre desde el id
+    def obtener_nombre(id_item):
+        # Buscar en bebidas
+        for producto in bebidas:
+            if producto.get("id_bebida") == id_item:
+                return producto.get("nombre", id_item)
+        # Buscar en bakery
+        for producto in bakery:
+            if producto.get("id_producto") == id_item:
+                return producto.get("nombre", id_item)
+        return id_item  # si no lo encuentra
+
+    # Leer ventas y armar el resumen del día
+    with open(ruta_ventas, newline="", encoding="utf-8-sig") as f:
+        archivo = csv.DictReader(f)
+        for fila in archivo:
+            # Filtrar solo ventas de hoy
+            if hoy in fila["fecha_hora"]:
+                nombre = obtener_nombre(fila["id_item"])
+                cantidad = int(fila["cantidad"])
+                total_linea = float(fila["total_linea"])
+                total_dia += total_linea
+
+                # Si el producto no está en el resumen, inicializarlo
+                if nombre not in resumen:
+                    resumen[nombre] = {"cantidad": 0, "total": 0.0}
+
+                # Acumular cantidad y total
+                resumen[nombre]["cantidad"] += cantidad
+                resumen[nombre]["total"] += total_linea
+
+    # Retornar el resumen y el total del día
+    return resumen, total_dia
 
