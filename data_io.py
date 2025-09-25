@@ -62,7 +62,7 @@ def leer_modificadores():
 # Funciones de escritura
 # ================================================================================ 
 def actualizar_bakery(bakery: list[dict]):
-  ruta = CARPETA_CATALOGO / "bakery_menu.csv"
+  ruta =carpeta_catalogo/ "bakery_menu.csv"
   # El modo w es para borrar lo que ya tenía el archivo y escribir de nuevo
   with open(ruta, mode="w", newline="", encoding="utf-8-sig") as f:
     campos = ["id_producto", "nombre", "categoria", "existencias", "precio_unitario", "activo"]
@@ -81,6 +81,7 @@ def actualizar_bakery(bakery: list[dict]):
         "activo": producto["activo"]
       })
 # ================================================================================ 
+#para que se haga la factura
 def guardar_lineas(pedido, id_pedido):
   ruta = Path("datos/ventas_del_dia/ventas.csv")
   # No borra lo que ya tiene el archivo, sino que agrega al final por eso es mode="a"
@@ -103,4 +104,93 @@ def guardar_lineas(pedido, id_pedido):
       })
 # ================================================================================ 
       
+#definir 4 funciones 
+
+# funcion para guardar los archivos en un csv
+
+# ================================================================================ 
+# Guarda un pedido en pedidos.csv
+def guardar_pedido(pedido, pago_info, id_pedido):
+  # Ruta del archivo donde se guardan los pedidos
+  ruta = Path("datos/ventas_del_dia/pedidos.csv")
+
+  # Abrir en modo "a" → agregar al final sin borrar
+  with open(ruta, mode="a", newline="", encoding="utf-8-sig") as f:
+    # Definir columnas del archivo
+    campos = ["id_pedido","fecha_hora","total_pedido","metodo_pago","monto_pagado","cambio"]
+
+    # Escritor que usa diccionarios
+    writer = csv.DictWriter(f, fieldnames=campos)
+
+    # Si el archivo está vacío → escribir cabecera
+    if f.tell() == 0:  
+      writer.writeheader()
+
+    # Escribir una fila con la info del pedido
+    writer.writerow({
+      "id_pedido": id_pedido,
+      "fecha_hora": pedido["fecha_hora"],
+      "total_pedido": f"{pedido['total']:.2f}", 
+      "metodo_pago": pago_info["metodo"],
+      "monto_pagado": f"{pago_info['monto']:.2f}",
+      "cambio": f"{pago_info['cambio']:.2f}"
+    })
+
+    # ================================================================================ 
+# PARA GUARDAR LOS MODIFICADORES
+    # ================================================================================ 
+    # Guarda los modificadores de un pedido en ventas_modificadores.csv
+def guardar_modificadores(pedido, id_pedido):
+  # Ruta del archivo donde se guardan los modificadores
+  ruta = Path("datos/ventas_del_dia/ventas_modificadores.csv")
+
+  # Abrir en modo "a" → agregar al final sin borrar
+  with open(ruta, mode="a", newline="", encoding="utf-8-sig") as f:
+    # Definir columnas del archivo
+    campos = ["id_ticket","id_linea","id_modificador","cantidad","ajuste_total"]
+    writer = csv.DictWriter(f, fieldnames=campos)
+
+    # Si el archivo está vacío → escribir cabecera
+    if f.tell() == 0:
+      writer.writeheader()
+
+    # Recorrer cada línea del pedido y sus modificadores
+    for linea in pedido["lineas"]:
+      for mod in linea["modificadores"]:
+        # Guardar fila con datos del modificador
+        writer.writerow({
+          "id_ticket": id_pedido,
+          "id_linea": linea["id_linea"],
+          "id_modificador": mod["id_modificador"],
+          "cantidad": 1,  # cada modificador cuenta como uno
+          "ajuste_total": f"{mod['ajuste_precio']:.2f}"
+        })
+ # ================================================================================
+# PARA EL CIERRE GENERAL
+  # ================================================================================
+
+# Registra el cierre general de un día en cierres_generales.csv
+def registrar_cierre_general(fecha, num_pedidos, total_dia):
+  # Ruta del archivo donde se guardan los cierres
+  ruta = Path("datos/cierres/cierres_generales.csv")
+
+  # Abrir en modo "a" → agregar al final sin borrar
+  with open(ruta, "a", newline="", encoding="utf-8-sig") as f:
+    # Definir columnas del archivo
+    campos = ["fecha", "num_pedidos", "total_dia"]
+    writer = csv.DictWriter(f, fieldnames=campos)
+
+    # Si el archivo está vacío → escribir cabecera
+    if f.tell() == 0:
+      writer.writeheader()
+
+    # Guardar fila con los datos del cierre
+    writer.writerow({
+      "fecha": fecha,
+      "num_pedidos": num_pedidos,
+      "total_dia": f"{total_dia:.2f}"
+    })
+
+     # ================================================================================
+
 
