@@ -46,19 +46,31 @@ MODIFICADORES = data_io.leer_modificadores()
 
 # Implementar la lógica para abrir la ventana de nuevo pedido
 def abrir_ventana_pedido():
-  """Implementa la lógica para abrir la venta de nuevo pedido"""
-  ventana_pedido = tk.Toplevel(ventana)
-  ventana_pedido.title("Café el economista")
-  ventana_pedido.geometry("400x350")
+    """Implementa la lógica para abrir la venta de nuevo pedido"""
+    ventana_pedido = tk.Toplevel(ventana)
+    ventana_pedido.title("Café el economista")
+    ventana_pedido.geometry("400x350")
 
-  tk.Label(ventana_pedido, text="Nuevo Pedido", font=("Arial", 14)).pack(pady=20)
+    tk.Label(ventana_pedido, text="Nuevo Pedido", font=("Arial", 14)).pack(pady=20)
+    def cancelar_pedido():
+        confirmar = messagebox.askyesno("Cancelar pedido", "¿Realmente desea cancelar el pedido?")
+        if confirmar:
+            pedido_actual["lineas"].clear()
+            pedido_actual["total"] = 0.0
+            pedido_actual["fecha_hora"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            global id_linea_actual
+            id_linea_actual = 0
+            messagebox.showinfo("Pedido cancelado", "El pedido fue cancelado correctamente.")
+            ventana_pedido.destroy()
 
-  # Botones del menú de pedido
-  tk.Button(ventana_pedido, text="Bebidas", width=25, command=mostrar_bebidas).pack(pady=5)
-  tk.Button(ventana_pedido, text="Bakery", width=25, command=mostrar_bakery).pack(pady=5)
-  tk.Button(ventana_pedido, text="Ver pedido",width=25, command=ver_pedido).pack(pady=10)
-  tk.Button(ventana_pedido, text="Pagar pedido", width=25, command=pagar_pedido).pack(pady=5)
-  tk.Button(ventana_pedido, text="Cancelar pedido", width=25, command=cancelar_pedido).pack(pady=20)
+    # Botones del menú de pedido
+    tk.Button(ventana_pedido, text="Bebidas", width=25, command=mostrar_bebidas).pack(pady=5)
+    tk.Button(ventana_pedido, text="Bakery", width=25, command=mostrar_bakery).pack(pady=5)
+    tk.Button(ventana_pedido, text="Ver pedido",width=25, command=ver_pedido).pack(pady=10)
+    tk.Button(ventana_pedido, text="Pagar pedido", width=25, command=pagar_pedido).pack(pady=5)
+    tk.Button(ventana_pedido, text="Cancelar pedido", width=25, command=cancelar_pedido).pack(pady=20)
+
+
 
 def mostrar_bebidas():
     ventana_bebidas = tk.Toplevel()
