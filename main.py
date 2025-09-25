@@ -170,7 +170,26 @@ def ventana_bebida_con_modificadores(bebida):
   #pass
 
 def ver_pedido():
-  pass
+    ventana_pedido = tk.Toplevel()
+    ventana_pedido.title("Resumen del pedido")
+
+    tk.Label(ventana_pedido, text="Pedido actual", font=("Arial", 14)).pack(pady=10)
+
+    if not pedido_actual["lineas"]:
+        tk.Label(ventana_pedido, text="No hay productos en el pedido.", font=("Arial", 12)).pack(pady=10)
+        return
+
+    for linea in pedido_actual["lineas"]:
+        texto = f"{linea['nombre']} - Q{linea['precio_unitario']:.2f}"
+        if linea["modificadores"]:
+            for mod in linea["modificadores"]:
+                texto += f"\n    + {mod['nombre']} (+Q{mod['ajuste_precio']:.2f})"
+        texto += f"\n  Subtotal: Q{linea['total_linea']:.2f}\n"
+        tk.Label(ventana_pedido, text=texto, justify="left", anchor="w", font=("Arial", 11)).pack(padx=20, pady=5, fill="x")
+
+    tk.Label(ventana_pedido, text=f"Total del pedido: Q{pedido_actual['total']:.2f}", font=("Arial", 12, "bold")).pack(pady=10)
+
+
 def pagar_pedido():
   pass
 def cancelar_pedido():
