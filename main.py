@@ -13,6 +13,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import datetime
+import data_io #para traer las funciones que están en data_io
 
 # ======== Datos de prueba, luego se cambia a leer desde CSV
 # BEBIDAS = [
