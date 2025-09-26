@@ -1,0 +1,23 @@
+id_bebida,nombre,precios_base,categoria,activo
+guate-01,guatemalteco,19.00,caliente,1
+cappu-02,cappuccino,26.00,caliente,1
+latte-03,latte,25.00,caliente,1
+molatte-04,mocca latte,33.00,caliente,1
+caramac-05,caramel macchiato,33.00,caliente,1
+bilatte-06,bianca latte,33.00,caliente,1
+chococa-11,chocolate caliente,29.00,caliente,1
+flatwhi-12,flat white,29.00,caliente,1
+chai-13,te chai,35.00,caliente,1
+matcha-14,te matcha,35.00,caliente,1
+colbreffee-07,cold brew coffee,22.00,frio,1
+colbrela-08,cold brew latte,26.00,frio,1
+icoffee-09,iced coffee,19.00,frio,1
+ilatte-10,iced latte,24.00,frio,1
+clasbar-15,clasico ,33.00,Frappe,1
+carfra-16,caramel frappe,33.00,Frappe,1
+moccfr-17,mocca frappe,33.00,Frappe,1
+bianmocfr-18,bianca mocca frappe,33.00,Frappe,1
+chocom-19,chocomaniaco,36.00,Frappe,1
+vanilafra-20,vainilla frappe,36.00,Frappe,1
+whitechosn-21,white chocolate snow,36.00,Frappe,1
+techai-22,te chai frappe,35.00,Frappe,1

@@ -1,0 +1,7 @@
+﻿id_producto,nombre,categoria,existencias,precio_unitario,activo
+mufvai,muffin de vainilla,muffin,10.0,17.00,1
+poundlimon,pound cake de limon,cake,10.0,18.00,1
+brown,brownie de chocolate,cake,10.0,22.00,1
+muffchoc,muffin de chocolate,muffin,10.0,22.00,1
+tarpeca,tartaleta de pecanas,cake,10.0,22.00,1
+pastcho,pastel de chocolate y cajeta,cake,10.0,30.00,1

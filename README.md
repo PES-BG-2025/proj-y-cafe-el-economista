@@ -1,3 +1,14 @@
+# Proyecto: caja registradora para café "El Economista"
+* **Descripción:** sistema de caja registradora para un café ("El Economista"), donde el colaborador puede elegir entre diversos productos (bebidas, productos de bakery, extras, etc). El programa lleva un inventario que se actualiza automáticamente cuando se venden productos, y al agotarse aparecerá como "agotado". También calcula el total a pagar. Se podrá generar un reporte con las ventas y el inventario. La interacción es a través de una interfaz gráfica desarrollada con Tkinter.
+
+* **Integrantes:** 
+  * Chuvac González, Berni Alejandro
+  * Pérez Romero, Rita Guadalupe
+
+* **Presentación:**
+https://innate-fight-b8e.notion.site/Caf-El-Economista-2798264fb10481e083bad4fcef6d5a58?source=copy_link
+
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/7IRjtlNy)
 # Presentación final del curso de Programación I
 
 Este repositorio tiene como propósito servir de contenedor para los archivos de la presentación final del curso. Se deben guardar todos los archivos utilizados para la presentación (vea las condiciones de entrega más adelante). 

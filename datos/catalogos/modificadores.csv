@@ -1,0 +1,12 @@
+id_modificador,nombre,tipo,ajuste_precio,activo
+extr-shot,shot de espresso ,cafe,5,1
+extr-javai,jarabe vainilla,jarabe,3,1
+extr-ja,jarabe caramelo,jarabe,3,1
+extr-lece,leche entera,leche,0,1
+extr-lecdeslac,leche deslactosada,leche,0,1
+extr-lecdescre,leche descremada,leche,0,1
+extr-lecs,leche de soya,leche,3,1
+extr-leal,leche de almendras,leche,3,1
+extr-cremb,crema batida,crema,5,1
+tamm,cambio tamaño a mediano,size,3,1
+tamg,cambio tamaño a grande,size,5,1
