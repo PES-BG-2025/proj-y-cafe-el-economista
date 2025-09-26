@@ -273,8 +273,14 @@ def pagar_pedido():
 
 def mostrar_reporte_dia():
   pass
+
 def cerrar_venta():
-  pass
+    confirmar = messagebox.askyesno("Confirmar", "¿Desea cerrar la venta del día?")
+    if confirmar:
+        data_io.generar_cierre_diario()
+        messagebox.showinfo("Cierre", "Cierre del día generado correctamente.")
+
+
 def salir():
   ventana.quit()
 
