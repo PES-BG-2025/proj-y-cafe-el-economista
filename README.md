@@ -5,6 +5,9 @@
   * Chuvac González, Berni Alejandro
   * Pérez Romero, Rita Guadalupe
 
+* **Presentación:**
+https://innate-fight-b8e.notion.site/Caf-El-Economista-2798264fb10481e083bad4fcef6d5a58?source=copy_link
+
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/7IRjtlNy)
 # Presentación final del curso de Programación I
 
