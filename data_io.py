@@ -103,28 +103,7 @@ def actualizar_bakery(bakery: list[dict]):
         "precio_unitario": f"{producto['precio_unitario']:.2f}",
         "activo": producto["activo"]
       })
-# ================================================================================ 
-#para que se haga la factura
-def guardar_lineas(pedido, id_pedido):
-  ruta = Path("datos/ventas_del_dia/ventas.csv")
-  # No borra lo que ya tiene el archivo, sino que agrega al final por eso es mode="a"
-  with open(ruta, mode="a", newline="", encoding="utf-8-sig") as f:
-    campos = ["fecha_hora","id_ticket","id_linea","tipo_item","id_item","cantidad","precio_unitario","total_linea"]
-    writer = csv.DictWriter(f, fieldnames=campos)
-    # tell devuelve la posición actual del cursor en el archivo, si es 0 es que el archivo está vacío y hay que escribir la cabecera
-    if f.tell() == 0:
-      writer.writeheader()
-    for linea in pedido["lineas"]:
-      writer.writerow({
-        "fecha_hora": pedido["fecha_hora"],
-        "id_ticket": id_pedido,
-        "id_linea": linea["id_linea"],
-        "tipo_item": linea["tipo"],
-        "id_item": linea["id_item"],
-        "cantidad": linea["cantidad"],
-        "precio_unitario": f"{linea['precio_unitario']:.2f}",
-        "total_linea": f"{linea['total_linea']:.2f}"
-      })
+
 # ================================================================================     
 # definir 4 funciones 
 # función para guardar los archivos en un csv
@@ -156,6 +135,28 @@ def guardar_pedido(pedido, pago_info, id_pedido):
       "monto_pagado": f"{pago_info['monto']:.2f}",
       "cambio": f"{pago_info['cambio']:.2f}"
     })
+# ================================================================================ 
+#para que se haga la factura
+def guardar_lineas(pedido, id_pedido):
+  ruta = Path("datos/ventas_del_dia/ventas.csv")
+  # No borra lo que ya tiene el archivo, sino que agrega al final por eso es mode="a"
+  with open(ruta, mode="a", newline="", encoding="utf-8-sig") as f:
+    campos = ["fecha_hora","id_ticket","id_linea","tipo_item","id_item","cantidad","precio_unitario","total_linea"]
+    writer = csv.DictWriter(f, fieldnames=campos)
+    # tell devuelve la posición actual del cursor en el archivo, si es 0 es que el archivo está vacío y hay que escribir la cabecera
+    if f.tell() == 0:
+      writer.writeheader()
+    for linea in pedido["lineas"]:
+      writer.writerow({
+        "fecha_hora": pedido["fecha_hora"],
+        "id_ticket": id_pedido,
+        "id_linea": linea["id_linea"],
+        "tipo_item": linea["tipo"],
+        "id_item": linea["id_item"],
+        "cantidad": linea["cantidad"],
+        "precio_unitario": f"{linea['precio_unitario']:.2f}",
+        "total_linea": f"{linea['total_linea']:.2f}"
+      })
 
 # ================================================================================ 
 # PARA GUARDAR LOS MODIFICADORES
@@ -187,32 +188,6 @@ def guardar_modificadores(pedido, id_pedido):
           "cantidad": 1,  # cada modificador cuenta como uno
           "ajuste_total": f"{mod['ajuste_precio']:.2f}"
         })
-# ================================================================================
-# PARA EL CIERRE GENERAL
-# ================================================================================
-
-# Registra el cierre general de un día en cierres_generales.csv
-def registrar_cierre_general(fecha, num_pedidos, total_dia):
-  # Ruta del archivo donde se guardan los cierres
-  ruta = Path("datos/cierres/cierres_generales.csv")
-
-  # Abrir en modo "a" → agregar al final sin borrar
-  with open(ruta, "a", newline="", encoding="utf-8-sig") as f:
-    # Definir columnas del archivo
-    campos = ["fecha", "num_pedidos", "total_dia"]
-    writer = csv.DictWriter(f, fieldnames=campos)
-
-    # Si el archivo está vacío → escribir cabecera
-    if f.tell() == 0:
-      writer.writeheader()
-
-    # Guardar fila con los datos del cierre
-    writer.writerow({
-      "fecha": fecha,
-      "num_pedidos": num_pedidos,
-      "total_dia": f"{total_dia:.2f}"
-    })
-
 # ================================================================================
 # Manejo de cierre de ventas
 # ================================================================================
@@ -259,6 +234,31 @@ def generar_cierre_diario():
   # Mensaje de confirmación en consola
   print(f"Cierre del {hoy} generado en {ruta}")
 
+# ================================================================================
+# PARA EL CIERRE GENERAL
+# ================================================================================
+
+# Registra el cierre general de un día en cierres_generales.csv
+def registrar_cierre_general(fecha, num_pedidos, total_dia):
+  # Ruta del archivo donde se guardan los cierres
+  ruta = Path("datos/cierres/cierres_generales.csv")
+
+  # Abrir en modo "a" → agregar al final sin borrar
+  with open(ruta, "a", newline="", encoding="utf-8-sig") as f:
+    # Definir columnas del archivo
+    campos = ["fecha", "num_pedidos", "total_dia"]
+    writer = csv.DictWriter(f, fieldnames=campos)
+
+    # Si el archivo está vacío → escribir cabecera
+    if f.tell() == 0:
+      writer.writeheader()
+
+    # Guardar fila con los datos del cierre
+    writer.writerow({
+      "fecha": fecha,
+      "num_pedidos": num_pedidos,
+      "total_dia": f"{total_dia:.2f}"
+    })
 
 # ================================================================================
 # Manejo de cierre de ventas

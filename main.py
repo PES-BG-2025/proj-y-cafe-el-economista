@@ -35,15 +35,15 @@ import data_io #para traer las funciones que están en data_io
 # ]
 # ======== Fin de datos de prueba
 
+BEBIDAS = data_io.leer_bebidas()
+BAKERY = data_io.leer_bakery()
+MODIFICADORES = data_io.leer_modificadores()
+
 pedido_actual = {
     "fecha_hora": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     "lineas": [],
     "total": 0.0}
 id_linea_actual = 0
-
-BEBIDAS = data_io.leer_bebidas()
-BAKERY = data_io.leer_bakery()
-MODIFICADORES = data_io.leer_modificadores()
 
 # Implementar la lógica para abrir la ventana de nuevo pedido
 def abrir_ventana_pedido():
@@ -70,8 +70,6 @@ def abrir_ventana_pedido():
     tk.Button(ventana_pedido, text="Ver pedido",width=25, command=ver_pedido).pack(pady=10)
     tk.Button(ventana_pedido, text="Pagar pedido", width=25, command=pagar_pedido).pack(pady=5)
     tk.Button(ventana_pedido, text="Cancelar pedido", width=25, command=cancelar_pedido).pack(pady=20)
-
-
 
 def mostrar_bebidas():
     ventana_bebidas = tk.Toplevel()
@@ -116,6 +114,7 @@ def ventana_bebida_con_modificadores(bebida):
     ventana_mods.title("Café el economista")
 
     precio_base = round(bebida["precios_base"], 2)
+    # DoubleVar para manejar el subtotal dinámicamente ya que puede tener decimales la suma, se estará actualizando cuando se seleccionen modificadores
     subtotal_var = tk.DoubleVar(value=precio_base)
 
     tk.Label(ventana_mods, text=bebida["nombre"], font=("Arial", 14)).pack(pady=10)
@@ -128,37 +127,49 @@ def ventana_bebida_con_modificadores(bebida):
 
     for mod in MODIFICADORES:
         if mod["activo"] == 1:
+            # Cada modificador tiene un IntVar para saber si está seleccionado o no (1 o 0)
             var = tk.IntVar()
             chk = tk.Checkbutton(
                 ventana_mods,
                 text=f"{mod['nombre']} (+Q{mod['ajuste_precio']:.2f})",
-                variable=var,
+                variable=var, # Asocia el IntVar al Checkbutton
                 command=lambda: actualizar_subtotal()
             )
             chk.pack(anchor="w", padx=20)
+            # Se agregan a las listas para luego procesarlos
             modificadores_activados.append(mod)
+            # Se agrega el IntVar a la lista que inicialmente tiene el valor 0 (no seleccionado)
             modificadores_vars.append(var)
 
     subtotal_label = tk.Label(ventana_mods, text=f"Subtotal: Q{subtotal_var.get():.2f}", font=("Arial", 12))
     subtotal_label.pack(pady=10)
 
+    # Cada vez que se selecciona o deselecciona un modificador, se actualiza el subtotal
     def actualizar_subtotal():
         total = precio_base
+        # Recorre todos los modificadores de la ventana
         for i in range(len(modificadores_activados)):
+            # Get obtiene el valor del IntVar y si tiene valor 1, suma al total el ajuste de precio del modificador
             if modificadores_vars[i].get() == 1:
                 total += modificadores_activados[i]["ajuste_precio"]
+        # Establece el nuevo valor del DoubleVar
         subtotal_var.set(round(total, 2))
+        # Agrega al label el nuevo subtotal
         subtotal_label.config(text=f"Subtotal: Q{subtotal_var.get():.2f}")
 
     def agregar_bebida():
         seleccionados = []
         for i in range(len(modificadores_activados)):
+            # De cada uno de los modificadores activos, si el IntVar asociado está en 1 (seleccionado) se agrega a la lista de seleccionados
             if modificadores_vars[i].get() == 1:
+                # Agrega el diccionario completo del modificador a la lista de seleccionados
                 seleccionados.append(modificadores_activados[i])
 
+        # Se usa global para modificar la variable id_linea_actual que está fuera de la función
         global id_linea_actual
+        # Incrementa el id de línea para cada nueva línea que se agrega al pedido
         id_linea_actual += 1
-
+        # For de cada modificador seleccionado, suma su ajuste de precio para obtener el total de la línea
         total_modificadores = sum(mod["ajuste_precio"] for mod in seleccionados)
         total_linea = precio_base + round(total_modificadores, 2)
 
@@ -175,16 +186,64 @@ def ventana_bebida_con_modificadores(bebida):
 
         pedido_actual["lineas"].append(nueva_linea)
         pedido_actual["total"] += total_linea
-
+        # Mensaje emergente de confirmación
         messagebox.showinfo("Pedido agregado", f"{bebida['nombre']} fue agregada correctamente.\nTotal: Q{total_linea:.2f}")
+        # Cierra la ventana de modificadores
         ventana_mods.destroy()
 
     tk.Button(ventana_mods, text="Agregar bebida", command=agregar_bebida).pack(pady=10)
   
-  
+def mostrar_bakery():
+    ventana_bakery = tk.Toplevel()
+    ventana_bakery.title("Café el economista")
 
-#def mostrar_bakery():
-  #pass
+    tk.Label(ventana_bakery, text="Productos de Bakery", font=("Arial", 14)).grid(row=0, column=0, columnspan=4, pady=10)
+
+    productos_activos = [p for p in BAKERY if p["activo"] == 1]
+
+    if not productos_activos:
+        tk.Label(ventana_bakery, text="No hay productos disponibles").grid(row=1, column=0, columnspan=4, pady=10)
+        return
+
+    def agregar_producto_bakery(producto, ventana_bakery):
+        global id_linea_actual
+        id_linea_actual += 1
+
+        nueva_linea = {
+            "id_linea": id_linea_actual,
+            "tipo": "bakery",
+            "id_item": producto["id_producto"],
+            "nombre": producto["nombre"],
+            "cantidad": 1,
+            "precio_unitario": producto["precio_unitario"],
+            "modificadores": [],
+            "total_linea": producto["precio_unitario"]
+        }
+
+        pedido_actual["lineas"].append(nueva_linea)
+        pedido_actual["total"] += producto["precio_unitario"]
+
+        messagebox.showinfo("Producto agregado", f"{producto['nombre']} fue agregado correctamente.\nTotal: Q{producto['precio_unitario']:.2f}")
+        ventana_bakery.destroy()
+    
+    fila = 1
+    columna = 0
+
+    for producto in productos_activos:
+        texto = f"{producto['nombre']} - Q{round(producto['precio_unitario'], 2)}"
+        boton = tk.Button(
+            ventana_bakery,
+            text=texto,
+            width=18,
+            command=lambda p=producto: agregar_producto_bakery(p, ventana_bakery)
+        )
+        boton.grid(row=fila, column=columna, padx=5, pady=5)
+
+        columna += 1
+        if columna == 4:
+            columna = 0
+            fila += 1
+
 
 def ver_pedido():
     ventana_pedido = tk.Toplevel()
@@ -268,6 +327,12 @@ def pagar_pedido():
     tk.Button(ventana_pago, text="Confirmar pago", command=confirmar_pago).pack(pady=10)
     tk.Button(ventana_pago, text="Cancelar", command=cancelar_pago).pack(pady=5)
 
+def cerrar_venta():
+    confirmar = messagebox.askyesno("Confirmar", "¿Desea cerrar la venta del día?")
+    if confirmar:
+        data_io.generar_cierre_diario()
+        messagebox.showinfo("Cierre", "Cierre del día generado correctamente.")
+
 def mostrar_reporte_dia():
     # Asigna a resumen y total, los dos valores que devuelve la función en main, indicando que recibe bebidas y bakery
     resumen, total_dia = data_io.generar_reporte_resumido_dia(BEBIDAS, BAKERY)
@@ -285,67 +350,9 @@ def mostrar_reporte_dia():
     tk.Label(ventana_reporte, text=f"\nTotal del día: Q{total_dia:.2f}", font=("Arial", 12, "bold")).pack(pady=10)
 
 
-def cerrar_venta():
-    confirmar = messagebox.askyesno("Confirmar", "¿Desea cerrar la venta del día?")
-    if confirmar:
-        data_io.generar_cierre_diario()
-        messagebox.showinfo("Cierre", "Cierre del día generado correctamente.")
-
-
 def salir():
   ventana.quit()
 
-
-def mostrar_bakery():
-    ventana_bakery = tk.Toplevel()
-    ventana_bakery.title("Café el economista")
-
-    tk.Label(ventana_bakery, text="Productos de Bakery", font=("Arial", 14)).grid(row=0, column=0, columnspan=4, pady=10)
-
-    productos_activos = [p for p in BAKERY if p["activo"] == 1]
-
-    if not productos_activos:
-        tk.Label(ventana_bakery, text="No hay productos disponibles").grid(row=1, column=0, columnspan=4, pady=10)
-        return
-
-    def agregar_producto_bakery(producto, ventana_bakery):
-        global id_linea_actual
-        id_linea_actual += 1
-
-        nueva_linea = {
-            "id_linea": id_linea_actual,
-            "tipo": "bakery",
-            "id_item": producto["id_producto"],
-            "nombre": producto["nombre"],
-            "cantidad": 1,
-            "precio_unitario": producto["precio_unitario"],
-            "modificadores": [],
-            "total_linea": producto["precio_unitario"]
-        }
-
-        pedido_actual["lineas"].append(nueva_linea)
-        pedido_actual["total"] += producto["precio_unitario"]
-
-        messagebox.showinfo("Producto agregado", f"{producto['nombre']} fue agregado correctamente.\nTotal: Q{producto['precio_unitario']:.2f}")
-        ventana_bakery.destroy()
-    
-    fila = 1
-    columna = 0
-
-    for producto in productos_activos:
-        texto = f"{producto['nombre']} - Q{round(producto['precio_unitario'], 2)}"
-        boton = tk.Button(
-            ventana_bakery,
-            text=texto,
-            width=18,
-            command=lambda p=producto: agregar_producto_bakery(p, ventana_bakery)
-        )
-        boton.grid(row=fila, column=columna, padx=5, pady=5)
-
-        columna += 1
-        if columna == 4:
-            columna = 0
-            fila += 1
 
 # Crear ventana principal
 ventana = tk.Tk()
@@ -369,6 +376,4 @@ btn_reporte.pack(pady=5)
 btn_salir = tk.Button(ventana, text="Salir", width=20, command=salir)
 btn_salir.pack(pady=20) # Espaciado vertical 20px
 
-
-if __name__ == "__main__":
-  ventana.mainloop()
+ventana.mainloop()
