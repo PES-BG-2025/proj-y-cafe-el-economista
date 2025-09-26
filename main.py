@@ -268,11 +268,22 @@ def pagar_pedido():
     tk.Button(ventana_pago, text="Confirmar pago", command=confirmar_pago).pack(pady=10)
     tk.Button(ventana_pago, text="Cancelar", command=cancelar_pago).pack(pady=5)
 
-
-
-
 def mostrar_reporte_dia():
-  pass
+    # Asigna a resumen y total, los dos valores que devuelve la función en main, indicando que recibe bebidas y bakery
+    resumen, total_dia = data_io.generar_reporte_resumido_dia(BEBIDAS, BAKERY)
+
+    ventana_reporte = tk.Toplevel()
+    ventana_reporte.title("Resumen de ventas del día")
+
+    tk.Label(ventana_reporte, text="Resumen por producto", font=("Arial", 14)).pack(pady=10)
+
+    # nombre y datos como indice en el diccionario resumen para optener cantidad y total
+    for nombre, datos in resumen.items():
+        texto = f"{nombre} - {datos['cantidad']} vendidos - Q{datos['total']:.2f}"
+        tk.Label(ventana_reporte, text=texto, justify="left", font=("Arial", 11)).pack(padx=20)
+
+    tk.Label(ventana_reporte, text=f"\nTotal del día: Q{total_dia:.2f}", font=("Arial", 12, "bold")).pack(pady=10)
+
 
 def cerrar_venta():
     confirmar = messagebox.askyesno("Confirmar", "¿Desea cerrar la venta del día?")
